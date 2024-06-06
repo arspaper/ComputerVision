@@ -1,7 +1,5 @@
 import mediapipe as mp
-
 import cv2
-
 import time
 
 cap = cv2.VideoCapture(0)
@@ -9,6 +7,8 @@ cap = cv2.VideoCapture(0)
 mpHands = mp.solutions.hands
 hands = mpHands.Hands()
 mpDraw = mp.solutions.drawing_utils
+flip = True  # if flip needed
+
 
 fingerTextScale = 0.5
 fingerTextThickness = 1
@@ -18,6 +18,8 @@ cTime = 0
 
 while True:
     success, img = cap.read()
+    if flip:
+        img = cv2.flip(img, 1)
     imageHeight, imageWidth, imageCenter = img.shape
     imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     results = hands.process(imgRGB)
