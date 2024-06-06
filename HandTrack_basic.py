@@ -25,26 +25,26 @@ while True:
         for handLms in results.multi_hand_landmarks:
             for id, lm in enumerate(handLms.landmark):
                 cx, cy = int(lm.x * imageWidth), int(lm.y * imageHeight)
-                if id == 0:  # PALM BASE
+                if id == 0:  # WRIST
                     cv2.circle(img, (cx, cy), 13, (0, 0, 255), cv2.FILLED)
-                    cv2.putText(img, "PALM BASE", (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (0, 0, 255), fingerTextThickness)
+                    cv2.putText(img, "0(WRIST)", (cx + 15, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (0, 0, 255), fingerTextThickness)
                 elif id == 4:  # THUMB
                     cv2.circle(img, (cx, cy), 10, (0, 127, 255), cv2.FILLED)
-                    cv2.putText(img, "THUMB", (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (0, 127, 255), fingerTextThickness)
+                    cv2.putText(img, "4(THUMB)", (cx + 15, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (0, 127, 255), fingerTextThickness)
                 elif id == 8:  # INDEX
                     cv2.circle(img, (cx, cy), 10, (0, 255, 126), cv2.FILLED)
-                    cv2.putText(img, "INDEX", (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (0, 255, 126), fingerTextThickness)
+                    cv2.putText(img, "8(INDEX)", (cx + 15, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (0, 255, 126), fingerTextThickness)
                 elif id == 12:  # MIDDLE
                     cv2.circle(img, (cx, cy), 10, (255, 255, 86), cv2.FILLED)
-                    cv2.putText(img, "MIDDLE", (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (255, 255, 86), fingerTextThickness)
+                    cv2.putText(img, "12(MIDDLE)", (cx + 15, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (255, 255, 86), fingerTextThickness)
                 elif id == 16:  # RING
                     cv2.circle(img, (cx, cy), 10, (255, 0, 127), cv2.FILLED)
-                    cv2.putText(img, "RING", (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (255, 0, 127), fingerTextThickness)
+                    cv2.putText(img, "16(RING)", (cx + 15, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (255, 0, 127), fingerTextThickness)
                 elif id == 20:  # PINKY
                     cv2.circle(img, (cx, cy), 10, (86, 255, 255), cv2.FILLED)
-                    cv2.putText(img, "PINKY", (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (86, 255, 255), fingerTextThickness)
+                    cv2.putText(img, "20(PINKY)", (cx + 15, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (86, 255, 255), fingerTextThickness)
                 else:
-                    cv2.putText(img, str(id), (cx + 10, cy + 10), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (255, 255, 255), fingerTextThickness)
+                    cv2.putText(img, str(id), (cx + 10, cy + 6), cv2.FONT_HERSHEY_SIMPLEX, fingerTextScale, (255, 255, 255), fingerTextThickness)
             mpDraw.draw_landmarks(img, handLms, mpHands.HAND_CONNECTIONS)
     
     cTime = time.time()
