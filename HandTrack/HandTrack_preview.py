@@ -2,6 +2,7 @@ import mediapipe as mp
 import cv2
 import time
 
+
 cap = cv2.VideoCapture(0)
 
 mpHands = mp.solutions.hands
@@ -57,3 +58,8 @@ while True:
 
     cv2.imshow("Cam", img)
     cv2.waitKey(1)
+    if cv2.getWindowProperty("Cam", cv2.WND_PROP_VISIBLE) < 1:
+        break
+
+cap.release()
+cv2.destroyAllWindows()

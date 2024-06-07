@@ -1,11 +1,14 @@
 import mediapipe as mp
 import cv2
 import time
+import pyautogui
+
+pyautogui.FAILSAFE = False
 
 
 
 class Hand():
-    def __init__(self, staticImageMode=False, maxHands=2, minDetectConf=0.5, minTrackConf=0.5):
+    def __init__(self, sensetivity=1, staticImageMode=False, maxHands=2, minDetectConf=0.5, minTrackConf=0.5):
         self.mode = staticImageMode
         self.maxHands = maxHands
         self.DetectConf = minDetectConf
@@ -13,6 +16,9 @@ class Hand():
         self.mpHands = mp.solutions.hands
         self.hands = self.mpHands.Hands(static_image_mode=self.mode, max_num_hands=self.maxHands, min_detection_confidence=self.DetectConf, min_tracking_confidence=self.TrackConf)
         self.mpDraw = mp.solutions.drawing_utils
+        self.conditionStartTime = None
+        self.prevWristPos = None
+        self.sens = sensetivity
 
     def findHands(self, img, drawLandmarks=True, drawKeyPointTitles=True):
         imageHeight, imageWidth, imageCenter = img.shape
@@ -54,11 +60,59 @@ class Hand():
             for id, lm in enumerate(myHand.landmark):
                 height, width, center = img.shape
                 cx, cy = int(lm.x * width), int(lm.y * height)
-                lmList.append([id, cx, cy])
+                lmList.append([cx, cy])
                 if draw:
                     cv2.circle(img, (cx, cy), 13, (255, 0, 255), cv2.FILLED)
         
         return lmList
+
+    def getModeCondition(self, lmList):
+        wristPos = lmList[0]
+        indexPos = lmList[5]
+        middlePos = lmList[9]
+        ringPos = lmList[13]
+        pinkyPos = lmList[17]
+        if  wristPos[1] < indexPos[1] and\
+            wristPos[1] < middlePos[1] and\
+            wristPos[1] < ringPos[1] and\
+            wristPos[1] < pinkyPos[1]:
+                if self.conditionStartTime is None:
+                    self.conditionStartTime = time.time()
+                
+                if time.time() - self.conditionStartTime > 1.5:
+                    return True
+    
+        else:
+            self.conditionStartTime = None
+        
+        return False
+
+    def mouse(self, lmList):
+        wristPos = lmList[0]
+        thumbPos = lmList[4]
+        indexPos = lmList[8]
+        middlePos = lmList[12]
+        ringPos = lmList[16]
+        pinkyPos = lmList[20]
+        if (middlePos[0] < ringPos[0] < pinkyPos[0] or middlePos[0] > ringPos[0] > pinkyPos[0]) and thumbPos[1] < middlePos[1]:  # 'Claw' mode
+            if self.prevWristPos is None:
+                self.prevWristPos = wristPos
+                return
+            xPos, yPos = pyautogui.position()
+            xHandPos, yHandPos = wristPos
+            xPrevHandPos, yPrevHandPos = self.prevWristPos
+            dx, dy = xHandPos - xPrevHandPos, yHandPos - yPrevHandPos
+            self.prevWristPos = wristPos
+            if abs(dx) > 1 or abs(dy) > 1:
+                pyautogui.moveTo(xPos + dx * self.sens, yPos + dy * self.sens)
+            
+            if ((indexPos[0] - thumbPos[0]) ** 2 + (indexPos[1] - thumbPos[1]) ** 2) ** 0.5 < 12:
+                pyautogui.click()
+        
+
+
+        else:
+            self.prevWristPos = None
 
 
 
