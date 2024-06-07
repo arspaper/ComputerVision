@@ -104,7 +104,7 @@ class Hand():
             dx, dy = xHandPos - xPrevHandPos, yHandPos - yPrevHandPos
             self.prevWristPos = wristPos
             if abs(dx) > 1 or abs(dy) > 1:
-                pyautogui.moveTo(xPos + dx * self.sens, yPos + dy * self.sens)
+                pyautogui.moveTo(int(xPos + dx * self.sens), int(yPos + dy * self.sens))
             
             if ((indexPos[0] - thumbPos[0]) ** 2 + (indexPos[1] - thumbPos[1]) ** 2) ** 0.5 < 12:
                 pyautogui.click()

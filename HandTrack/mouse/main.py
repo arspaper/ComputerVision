@@ -5,7 +5,7 @@ import HandMouse_module as htm
 
 
 flipCam = True
-sensetivity = 1
+sensetivity = 200
 
 
 
